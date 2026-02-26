@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Shopee Aff Tool</title>
+</head>
+<body>
+  <h2>Shopee Link → Tạo Link Affiliate</h2>
+
+  <input type="text" id="link" placeholder="Dán link Shopee vào đây" style="width:100%;padding:10px;">
+  <br><br>
+
+  <button onclick="convert()">Tạo Link Aff</button>
+
+  <p id="result"></p>
+
+  <script>
+    async function convert() {
+      let url = document.getElementById("link").value;
+      let affiliateId = "17344450072"; // AFF ID của bạn
+
+      try {
+        let response = await fetch(url, { method: 'GET', redirect: 'follow' });
+        let finalUrl = response.url;
+
+        let match = finalUrl.match(/product\/(\d+)\/(\d+)/);
+
+        if(match){
+          let shopid = match[1];
+          let productid = match[2];
+
+          let affLink = "https://s.shopee.vn/an_redir?origin_link=" 
+            + encodeURIComponent("https://shopee.vn/product/" + shopid + "/" + productid)
+            + "&affiliate_id=" + affiliateId;
+
+          document.getElementById("result").innerHTML =
+            "Shop ID: " + shopid + "<br>" +
+            "Product ID: " + productid + "<br><br>" +
+            "<b>Link Affiliate:</b><br>" +
+            "<textarea style='width:100%;height:80px'>" + affLink + "</textarea>";
+        } else {
+          document.getElementById("result").innerHTML =
+            "Không lấy được ID.";
+        }
+      } catch(e){
+        document.getElementById("result").innerHTML =
+          "Link không hợp lệ hoặc bị chặn.";
+      }
+    }
+  </script>
+
+</body>
+</html>
